@@ -3,12 +3,6 @@ function main() {
   reset();
   ctx.fillStyle = "rgb(255, 0, 0)";
   spriteList.forEach((s, index) => {
-    if (s.pos.x + s.vel.x < 0 || s.pos.x + s.vel.x + s.rect.width > width) {
-      s.bounceX();
-    }
-    if (s.pos.y + s.vel.y < 0 || s.pos.y + s.vel.y + s.rect.height > height) {
-      s.bounceY();
-    }
     for (let i = index + 1; i < spriteList.length; i++) {
       if (s.collidesWith(spriteList[i])) {
       }
@@ -37,20 +31,18 @@ const ctx = canvas.getContext("2d");
 
 let spriteList = [];
 let selected = 0;
-spriteList.push(new BoxSprite(ctx, new Rect(0, 0, 15, 15), width, height));
-
 main();
 
 let onSquare = false;
 const addSprite = (x, y) => {
-  spriteList.push(new BoxSprite(ctx, new Rect(x, y, 15, 15), width, height));
-  console.log(`Added sprite at ${x} and ${y}`);
+  // spriteList.push(new BoxSprite(ctx, new Rect(x, y, 30, 30), new Vector(width, height)));
+  spriteList.push(new SphereSprite(ctx, 15, new Vector(x, y), new Vector(width, height)));
 };
 
 canvas.addEventListener("mousedown", (e) => {
   mouse.onMouseDown(e);
   spriteList.forEach((s, index) => {
-    if (s.rect.inRect(mouse.pos.x, mouse.pos.y)) {
+    if (s.inSprite(mouse.pos.x, mouse.pos.y)) {
       onSquare = true;
       selected = index;
     }
@@ -73,7 +65,6 @@ canvas.addEventListener("mouseup", (e) => {
   if (!onSquare) {
     addSprite(mouse.pos.x, mouse.pos.y);
   } else {
-    console.log(action.velocity);
     spriteList[selected].vel.set(action.velocity.x, action.velocity.y);
     spriteList[selected].gravity = true;
   }

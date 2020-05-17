@@ -41,8 +41,7 @@ class MotionMotion {
     this.duration = duration;
     this.startPos = startPos;
     this.endPos = endPos;
-    let v = new VectorUtils();
-    this.displacement = v.subtract(endPos, startPos);
-    this.velocity = v.divide(v.divide(this.displacement, 100), this.duration);
+    this.displacement = Vector.subtract(endPos, startPos);
+    this.velocity = Vector.divide(Vector.divide(this.displacement, 100), this.duration);
   }
 }

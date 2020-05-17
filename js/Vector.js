@@ -28,22 +28,19 @@ class Vector {
     this.x /= scalar;
     this.y /= scalar;
   }
-}
-
-class VectorUtils {
-  add(vector1, vector2) {
+  static add(vector1, vector2) {
     return new Vector(vector1.x + vector2.x, vector1.y + vector2.y);
   }
-  subtract(vector1, vector2) {
+  static subtract(vector1, vector2) {
     return new Vector(vector1.x - vector2.x, vector1.y - vector2.y);
   }
-  dot(vector1, vector2) {
+  static dot(vector1, vector2) {
     return vector1.x * vector2.x + vector1.y * vector2.y;
   }
-  multiply(vector, scalar) {
+  static multiply(vector, scalar) {
     return new Vector(vector.x * scalar, vector.y * scalar);
   }
-  divide(vector, scalar) {
+  static divide(vector, scalar) {
     return new Vector(vector.x / scalar, vector.y / scalar);
   }
 }
