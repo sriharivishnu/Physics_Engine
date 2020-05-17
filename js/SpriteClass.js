@@ -54,16 +54,10 @@ class PhysicsSprite extends Sprite {
     super(drawer, x, y);
   }
   bounceX() {
-    if (-0.1 < this.vel.x < 0.1) {
-      this.vel.x = 0;
-    }
     this.vel.x = -this.vel.x * 0.8;
   }
 
   bounceY() {
-    if (-0.1 < this.vel.y < 0.1) {
-      this.vel.y = 0;
-    }
     this.vel.y = -this.vel.y * 0.8;
   }
 }

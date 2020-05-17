@@ -38,9 +38,12 @@ class Mouse {
     return new MotionMotion(this.time.endTimer(), this.startPos, this.pos, this.velocity);
   }
   update() {
-    this.velocity = Vector.subtract(this.pos, this.lastPos);
-    this.velocity.divide(this.time.getDeltaTime() * 100);
-    this.lastPos.set(this.pos.x, this.pos.y);
+    //Optimize
+    if (this.mouseDown) {
+      this.velocity = Vector.subtract(this.pos, this.lastPos);
+      this.velocity.divide(this.time.getDeltaTime() * 100);
+      this.lastPos.set(this.pos.x, this.pos.y);
+    }
   }
 }
 
