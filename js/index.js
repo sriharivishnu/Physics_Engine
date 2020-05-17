@@ -1,5 +1,6 @@
 function main() {
   time.tick();
+  mouse.update();
   reset();
   ctx.fillStyle = "rgb(255, 0, 0)";
   spriteList.forEach((s, index) => {
@@ -20,8 +21,8 @@ function reset() {
 const canvas = document.querySelector(".canvas");
 let width = canvas.width;
 let height = canvas.height;
-const mouse = new Mouse(canvas.getBoundingClientRect(), canvas, width, height);
 const time = new Time();
+const mouse = new Mouse(canvas.getBoundingClientRect(), canvas, width, height, time);
 window.onresize = (e) => {
   mouse.updateBounds(canvas.getBoundingClientRect());
 };
