@@ -35,8 +35,14 @@ class Vector {
   }
   normalize() {
     const m = this.getMagnitude();
-    this.x /= m;
-    this.y /= m;
+    if (m == 0) {
+      this.x = 0;
+      this.y = 0;
+      console.log("ZERO");
+    } else {
+      this.x /= m;
+      this.y /= m;
+    }
     return this;
   }
   static add(vector1, vector2) {

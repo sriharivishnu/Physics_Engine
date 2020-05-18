@@ -4,11 +4,11 @@ function main() {
   reset();
   ctx.fillStyle = "rgb(255, 0, 0)";
   spriteList.forEach((s, index) => {
-    s.update(time.getDeltaTime());
     for (let i = index + 1; i < spriteList.length; i++) {
       s.collidesWith(spriteList[i], time.getDeltaTime());
-      spriteList[i].collidesWith(s, time.getDeltaTime());
+      // spriteList[i].collidesWith(s, time.getDeltaTime());
     }
+    s.update(time.getDeltaTime());
   });
   requestAnimationFrame(main);
 }

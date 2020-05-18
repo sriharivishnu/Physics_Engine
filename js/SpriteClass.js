@@ -33,6 +33,7 @@ class Rect {
     return this.left <= x && x <= this.right && this.top <= y && y <= this.bottom;
   }
 }
+const PIXELSPERMETER = 100;
 
 class Sprite {
   constructor(drawer, x, y) {
@@ -40,11 +41,12 @@ class Sprite {
     this.pos = new Vector(x, y);
     this.vel = new Vector(0, 0);
     this.accel = new Vector(0, 0);
-    this.gravity = true;
   }
   inSprite(x, y) {}
   update(deltaTime) {
+    this.pos.add(Vector.multiply(this.vel, deltaTime * PIXELSPERMETER));
     this.vel.multiply(0.99);
+    this.vel.add(Vector.multiply(this.accel, deltaTime));
   }
   collidesWith(sprite) {}
 }
@@ -52,8 +54,21 @@ class Sprite {
 class PhysicsSprite extends Sprite {
   constructor(drawer, x, y) {
     super(drawer, x, y);
-    this.accel = new Vector(0, 9.81);
+    this.gravity = true;
+    this.mass = 1;
+    this.forces = new Vector(0, 9.81 * this.mass);
   }
+
+  update(deltaTime) {
+    super.update(deltaTime);
+    if (!this.gravity) {
+      this.forces.y = 0;
+    } else {
+      this.forces.y = 9.81 * this.mass;
+    }
+    this.accel = Vector.divide(this.forces, this.mass);
+  }
+
   bounceX() {
     this.vel.x = -this.vel.x * 0.5;
     if (Math.abs(this.vel.x) < 0.01) {

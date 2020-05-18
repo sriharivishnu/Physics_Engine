@@ -1,5 +1,4 @@
 /* Sphere SPRITE */
-const PIXELSPERMETER = 100;
 class SphereSprite extends PhysicsSprite {
   constructor(drawer, radius, pos, screenDimen) {
     super(drawer, pos.x, pos.y);
@@ -24,19 +23,15 @@ class SphereSprite extends PhysicsSprite {
 
   updatePosition(deltaTime) {
     // console.log(this.vel);
-    this.pos.add(Vector.multiply(this.vel, deltaTime * PIXELSPERMETER));
     let x = Math.min(Math.max(this.radius, this.pos.x), this.screenDimen.x - this.radius);
     let y = Math.min(Math.max(this.radius, this.pos.y), this.screenDimen.y - this.radius);
     this.pos.set(x, y);
   }
 
   update(deltaTime) {
-    super.update();
-    this.bounceSphere();
-    if (this.gravity) {
-      this.vel.add(Vector.multiply(this.accel, deltaTime));
-    }
+    super.update(deltaTime);
     this.updatePosition(deltaTime);
+    this.bounceSphere();
     this.drawer.beginPath();
     this.drawer.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI);
     this.drawer.fill();
@@ -55,6 +50,8 @@ class SphereSprite extends PhysicsSprite {
     //Velocity not in the same direction as the other sphere
     if (Vector.dot(Vector.subtract(this.vel, sprite.vel), diff) < 0) {
       return false;
+    }
+    if (diff.x * diff.x + diff.y * diff.y < Math.pow(this.radius + sprite.radius, 2)) {
     }
     diff.normalize();
     let a1 = Vector.dot(this.vel, diff);
@@ -99,11 +96,8 @@ class BoxSprite extends PhysicsSprite {
   }
 
   update(deltaTime) {
-    super.update();
+    super.update(deltaTime);
     this.bounceBox();
-    if (this.gravity) {
-      this.vel.add(Vector.multiply(this.accel, deltaTime));
-    }
     this.updatePosition();
     this.rect.update(this.pos.x, this.pos.y);
     this.drawer.fillRect(this.rect.x, this.rect.y, this.rect.width, this.rect.height);
