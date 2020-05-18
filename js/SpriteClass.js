@@ -39,7 +39,7 @@ class Sprite {
     this.drawer = drawer;
     this.pos = new Vector(x, y);
     this.vel = new Vector(0, 0);
-    this.accel = new Vector(0, 9.81);
+    this.accel = new Vector(0, 0);
     this.gravity = true;
   }
   inSprite(x, y) {}
@@ -52,12 +52,19 @@ class Sprite {
 class PhysicsSprite extends Sprite {
   constructor(drawer, x, y) {
     super(drawer, x, y);
+    this.accel = new Vector(0, 9.81);
   }
   bounceX() {
-    this.vel.x = -this.vel.x * 0.8;
+    this.vel.x = -this.vel.x * 0.5;
+    if (Math.abs(this.vel.x) < 0.01) {
+      this.vel.x = 0;
+    }
   }
 
   bounceY() {
-    this.vel.y = -this.vel.y * 0.8;
+    this.vel.y = -this.vel.y * 0.5;
+    if (Math.abs(this.vel.y) < 0.01) {
+      this.vel.y = 0;
+    }
   }
 }

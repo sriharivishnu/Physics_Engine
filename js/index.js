@@ -4,11 +4,11 @@ function main() {
   reset();
   ctx.fillStyle = "rgb(255, 0, 0)";
   spriteList.forEach((s, index) => {
-    for (let i = index + 1; i < spriteList.length; i++) {
-      if (s.collidesWith(spriteList[i])) {
-      }
-    }
     s.update(time.getDeltaTime());
+    for (let i = index + 1; i < spriteList.length; i++) {
+      s.collidesWith(spriteList[i], time.getDeltaTime());
+      spriteList[i].collidesWith(s, time.getDeltaTime());
+    }
   });
   requestAnimationFrame(main);
 }
@@ -38,6 +38,7 @@ let onSquare = false;
 const addSprite = (x, y) => {
   // spriteList.push(new BoxSprite(ctx, new Rect(x, y, 30, 30), new Vector(width, height)));
   spriteList.push(new SphereSprite(ctx, 15, new Vector(x, y), new Vector(width, height)));
+  console.log(`Added sprite at ${x}, ${y}`);
 };
 
 canvas.addEventListener("mousedown", (e) => {
@@ -54,20 +55,43 @@ canvas.addEventListener("mousedown", (e) => {
   }
 });
 
+function randomise() {
+  spriteList.forEach((s) => {
+    s.pos.set(Math.round(Math.random() * 900) + 10, Math.round(Math.random() * 900) + 10);
+  });
+}
+function deleteSprite() {
+  spriteList.pop();
+}
 canvas.addEventListener("mousemove", (e) => {
   mouse.onMouseMove(e);
   if (onSquare) {
     spriteList[selected].pos.set(mouse.pos.x, mouse.pos.y);
+    // spriteList[selected].vel.set(mouse.velocity.x, mouse.velocity.y);
   }
 });
 
 canvas.addEventListener("mouseup", (e) => {
-  const action = mouse.onMouseUp(e);
+  mouse.onMouseUp(e);
   if (!onSquare) {
     addSprite(mouse.pos.x, mouse.pos.y);
   } else {
-    spriteList[selected].vel.set(action.velocity.x, action.velocity.y);
+    spriteList[selected].vel.set(mouse.velocity.x, mouse.velocity.y);
     spriteList[selected].gravity = true;
   }
   onSquare = false;
+});
+
+document.addEventListener("keydown", (e) => {
+  switch (String.fromCharCode(e.keyCode)) {
+    case "A":
+      addSprite(mouse.pos.x, mouse.pos.y);
+      break;
+    case "D":
+      deleteSprite();
+      break;
+    case "R":
+      randomise();
+      break;
+  }
 });

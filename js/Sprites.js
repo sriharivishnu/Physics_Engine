@@ -1,5 +1,5 @@
 /* Sphere SPRITE */
-
+const PIXELSPERMETER = 100;
 class SphereSprite extends PhysicsSprite {
   constructor(drawer, radius, pos, screenDimen) {
     super(drawer, pos.x, pos.y);
@@ -22,8 +22,9 @@ class SphereSprite extends PhysicsSprite {
     }
   }
 
-  updatePosition() {
-    this.pos.add(this.vel);
+  updatePosition(deltaTime) {
+    // console.log(this.vel);
+    this.pos.add(Vector.multiply(this.vel, deltaTime * PIXELSPERMETER));
     let x = Math.min(Math.max(this.radius, this.pos.x), this.screenDimen.x - this.radius);
     let y = Math.min(Math.max(this.radius, this.pos.y), this.screenDimen.y - this.radius);
     this.pos.set(x, y);
@@ -35,7 +36,7 @@ class SphereSprite extends PhysicsSprite {
     if (this.gravity) {
       this.vel.add(Vector.multiply(this.accel, deltaTime));
     }
-    this.updatePosition();
+    this.updatePosition(deltaTime);
     this.drawer.beginPath();
     this.drawer.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI);
     this.drawer.fill();
@@ -44,8 +45,25 @@ class SphereSprite extends PhysicsSprite {
     super.inSprite(x, y);
     return Math.pow(x - this.pos.x, 2) + Math.pow(y - this.pos.y, 2) <= this.radius * this.radius;
   }
-  collidesWith(sprite) {
+  collidesWith(sprite, deltaTime) {
     super.collidesWith(sprite);
+    const diff = Vector.subtract(sprite.pos, this.pos);
+    //Distance less than sum of radii
+    if (diff.x * diff.x + diff.y * diff.y > Math.pow(this.radius + sprite.radius, 2)) {
+      return false;
+    }
+    //Velocity not in the same direction as the other sphere
+    if (Vector.dot(this.vel, diff) < 0) {
+      return false;
+    }
+    diff.normalize();
+    let a1 = Vector.dot(this.vel, diff);
+    let a2 = Vector.dot(sprite.vel, diff);
+
+    let optimized = a1 - a2;
+    // console.log(this.vel, sprite.vel, optimized);
+    this.vel.subtract(Vector.multiply(diff, optimized));
+    sprite.vel.add(Vector.multiply(diff, optimized));
   }
 }
 
