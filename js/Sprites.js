@@ -53,7 +53,7 @@ class SphereSprite extends PhysicsSprite {
       return false;
     }
     //Velocity not in the same direction as the other sphere
-    if (Vector.dot(this.vel, diff) < 0) {
+    if (Vector.dot(Vector.subtract(this.vel, sprite.vel), diff) < 0) {
       return false;
     }
     diff.normalize();
